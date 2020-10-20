@@ -1,11 +1,3 @@
-library(politeness)
-library(tidyverse)
-library(glmnet)
-
-CWstudy1<-read.csv("CWstudy1.csv")
-
-CWstudy3turns<-read.csv("CWstudy3turns.csv")
-CWstudy3people<-read.csv("CWstudy3people.csv")
 
 ######################################################
 # Data for pre-trained model from Study 1
@@ -47,16 +39,18 @@ buyer.first.DV<-CWstudy3people %>%
 
 buyer.first.pred<-as.vector(politenessProjection(polite.train,DV.train,buyer.first.polite)$test_proj)
 
-pROC::roc(buyer.first.DV, buyer.first.pred, ci=T)
+pROC::roc(buyer.first.DV, buyer.first.pred, ci=TRUE)
 
 
 politeness::politenessPlot(buyer.first.polite,
                            split=buyer.first.DV,
                            split_levels=c("Warm","Tough"),
-                           split_name="Communication\n         Style",
+                           split_name="Communication       Style",
                            split_cols=c("firebrick","darkslategray2"),
-                           top_title="Study 3 Buyer Initial Offers")
-#ggsave(filename="Figure_2a.png", width=1200, height=1200, res=200)
+                           top_title="Buyer Initial Offers") + 
+  theme(title = element_text(size=24))
+
+ggsave(filename="buyer_initial.png", units="cm",  width=22, height=15)
 
 ##########################################################################################
 # All Buyer Chat- Politeness
@@ -74,15 +68,18 @@ buyer.all.DV<-CWstudy3people %>%
 
 buyer.all.pred<-as.vector(politenessProjection(polite.train,DV.train,buyer.all.polite)$test_proj)
 
-pROC::roc(buyer.all.DV, buyer.all.pred, ci=T)
+pROC::roc(buyer.all.DV, buyer.all.pred, ci=TRUE)
 
 
 politeness::politenessPlot(buyer.all.polite,
                            split=buyer.all.DV,
                            split_levels=c("Warm","Tough"),
-                           split_name="Communication\n         Style",
+                           split_name="Communication       Style",
                            split_cols=c("firebrick","darkslategray2"),
-                           top_title="Study 3 Buyer Later Chat Text")
+                           top_title="Buyer Rest of Chat") + 
+  theme(title = element_text(size=24))
+
+ggsave(filename="buyer_rest.png", units="cm", width=22, height=15)
 ##########################################################################################
 # Initial Seller Response - Politeness
 ##########################################################################################
@@ -99,18 +96,18 @@ seller.first.DV<-CWstudy3people %>%
 
 seller.first.pred<-politenessProjection(polite.train,DV.train,seller.first.polite)$test_proj
 
-pROC::roc(seller.first.DV, seller.first.pred, ci=T)
+pROC::roc(seller.first.DV, seller.first.pred, ci=TRUE)
 
 
 politeness::politenessPlot(seller.first.polite,
                            split=seller.first.DV,
                            split_levels=c("Warm","Tough"),
-                           split_name="Communication\n         Style",
+                           split_name="Communication       Style",
                            split_cols=c("firebrick","darkslategray2"),
-                           top_title="Study 3 Seller Initial Offers")
+                           top_title="Seller Initial Reply") + 
+  theme(title = element_text(size=24))
 
-
-#ggsave(filename="Figure_2b.png", units="cm", width=20, height=20, res=200)
+ggsave(filename="seller_initial.png", units="cm", width=22, height=15)
 
 
 
@@ -129,20 +126,18 @@ seller.all.DV<-CWstudy3people %>%
 
 seller.all.pred<-politenessProjection(polite.train,DV.train,seller.all.polite)$test_proj
 
-pROC::roc(seller.all.DV, seller.all.pred, ci=T)
-
-
-#seller.all.pred<-politenessProjection(buyer.first.polite,buyer.first.DV,seller.all.polite)$test_proj
-#pROC::roc(seller.all.DV, seller.all.pred, ci=T)
-
-
+pROC::roc(seller.all.DV, seller.all.pred, ci=TRUE)
 
 politeness::politenessPlot(seller.all.polite,
                            split=seller.all.DV,
                            split_levels=c("Warm","Tough"),
-                           split_name="Communication\n         Style",
+                           split_name="Communication       Style",
                            split_cols=c("firebrick","darkslategray2"),
-                           top_title="Study 3 Seller All Chat Text")
+                           top_title="Seller Rest of Chat") + 
+  theme(title = element_text(size=24))
+
+ggsave(filename="seller_rest.png", units="cm", width=22, height=15)
+
 ##########################################################################################
 ##########################################################################################
 

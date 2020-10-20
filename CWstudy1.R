@@ -11,47 +11,47 @@
 
 # Structured Responses
 
-study1 %>%
+CWstudy1 %>%
   group_by(warm) %>%
   summarize(m=mean(OwnMessage),
             sd=sd(OwnMessage))
 
-study1 %>%
-  with(t.test(OwnMessage~warm, var.equal=T))
+CWstudy1 %>%
+  with(t.test(OwnMessage~warm, var.equal=TRUE))
 
-study1 <-study1 %>%
+CWstudy1 <-CWstudy1 %>%
   mutate(about.the.same=1*(OwnMessage==3)) 
 
-study1%>%
+CWstudy1%>%
   group_by(warm) %>%
   summarize(m=mean(about.the.same))
 
-study1 %>%
+CWstudy1 %>%
   with(chisq.test(table(about.the.same,warm)))
 
 # Writing Time
 
-study1 %>%
+CWstudy1 %>%
   group_by(warm) %>%
   summarize(m=mean(write.time),
             sd=sd(write.time))
 
-study1 %>%
-  with(t.test(write.time~warm, var.equal=T))
+CWstudy1 %>%
+  with(t.test(write.time~warm, var.equal=TRUE))
 
 
 # Word Count
 
-study1 <-study1 %>%
+CWstudy1 <-CWstudy1 %>%
   mutate(wordCount=str_count(message,"[[alpha:]]+")) 
 
-study1 %>%
+CWstudy1 %>%
   group_by(warm) %>%
   summarize(m=mean(write.time),
             sd=sd(write.time))
 
-study1 %>%
-  with(t.test(wordCount~warm, var.equal=T))
+CWstudy1 %>%
+  with(t.test(wordCount~warm, var.equal=TRUE))
 
 
 ####################################################
@@ -60,16 +60,16 @@ study1 %>%
 
 #spacyr::spacy_initialize()
 
-polite.data<-politeness(study1$message, parser="spacy",drop_blank=FALSE)
+polite.data<-politeness(CWstudy1$message, parser="spacy")
 
 # Examples
-findPoliteTexts(study1$message,polite.data,study1$warm,type = "most")
-findPoliteTexts(study1$message,polite.data,study1$warm,type = "least")
+findPoliteTexts(CWstudy1$message,polite.data,CWstudy1$warm,type = "most")
+findPoliteTexts(CWstudy1$message,polite.data,CWstudy1$warm,type = "least")
 
 # Plot
 politenessPlot(polite.data,
                middle_out=.01,
-               split=(study1$warm==1),
+               split=(CWstudy1$warm==1),
                split_levels=c("Warm","Tough"),
                split_name="Communication Style",
                split_cols=c("darkslategray2","firebrick"))
@@ -88,6 +88,6 @@ LIWCwarm<-quanteda::dictionary(list(warmth=c("affectionate","child*","cheer*","c
                                              "quiet*","respon*","sensitiv*","submissive","supporti*","sympath*",
                                              "tender*","together*","trust*","understand*","warm*","whin*","yield*")))
 
-study1$warmth<-as.vector(dfm(study1$message,dictionary=LIWCwarm))/study1$wordCount
+CWstudy1$warmth<-as.vector(dfm(CWstudy1$message,dictionary=LIWCwarm))/CWstudy1$wordCount
 
-hist(study1$warmth)
+hist(CWstudy1$warmth)
