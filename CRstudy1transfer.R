@@ -9,24 +9,24 @@
 #######################################################
 # Does receptiveness model transfer across topics?
 #######################################################
-blm.polite<-CRstudy1 %>%
+blm.polite<-CRstudy1A %>%
   filter(issue=="blm") %>% 
   select(text) %>%
   politeness::politeness(parser="spacy")
 
-blm.DV.rated<-CRstudy1 %>% 
+blm.DV.rated<-CRstudy1A %>% 
   filter(issue=="blm") %>% 
   select(receptiveAll) %>%
   unlist() %>%
   as.numeric()
 
-sa.polite<-CRstudy1 %>%
+sa.polite<-CRstudy1A %>%
   filter(issue=="sa") %>% 
   select(text) %>%
   unlist() %>%
   politeness::politeness(parser="spacy")
 
-sa.DV.rated<-CRstudy1 %>% 
+sa.DV.rated<-CRstudy1A %>% 
   filter(issue=="sa") %>% 
   select(receptiveAll) %>%
   unlist() %>%
@@ -52,26 +52,26 @@ print(cor.test(politenessProjection(sa.polite,
 # bag-of-words transfer learning
 ##########################################
 
-blm.DV.rated<-CRstudy1 %>% 
+blm.DV.rated<-CRstudy1A %>% 
   filter(issue=="blm") %>% 
   select(receptiveAll) %>%
   unlist() %>%
   as.numeric()
 
-sa.DV.rated<-CRstudy1 %>% 
+sa.DV.rated<-CRstudy1A %>% 
   filter(issue=="sa") %>% 
   select(receptiveAll) %>%
   unlist() %>%
   as.numeric()
 
-blm.ng<-CRstudy1 %>%
+blm.ng<-CRstudy1A %>%
   filter(issue=="blm") %>% 
   select(text) %>%
   unlist() %>%
   DTMtools::DTM(ngrams = 1:3, stop.words = TRUE) %>%
   as.tibble()
 
-sa.ng<-CRstudy1 %>%
+sa.ng<-CRstudy1A %>%
   filter(issue=="sa") %>% 
   select(text) %>%
   unlist() %>%
@@ -89,14 +89,14 @@ print(cor.test(politenessProjection(blm.ng,
 
 # both ways!
 
-sa.ng<-CRstudy1 %>%
+sa.ng<-CRstudy1A %>%
   filter(issue=="sa") %>% 
   select(text) %>%
   unlist() %>%
   DTMtools::DTM(ngrams = 1:3, stop.words = TRUE) %>%
   as.tibble()
 
-blm.ng<-CRstudy1 %>%
+blm.ng<-CRstudy1A %>%
   filter(issue=="blm") %>% 
   select(text) %>%
   unlist() %>%

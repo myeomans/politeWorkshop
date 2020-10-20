@@ -7,11 +7,11 @@ CRstudy1A[grepl("The public reaction has not been overblown",CRstudy1A$seedtext)
 
 CRstudy1A %>%
   filter(grepl("The public reaction has not been overblown",seedtext)) %>%
-  with(findPoliteTexts(text, politeness(text,parser="spacy"),receptiveNLP,num_docs = 10,type="most"))
+  with(findPoliteTexts(text, politeness(text,parser="spacy"),receptiveNLP,type="least"))
 
 CRstudy1A %>%
   filter(grepl("The public reaction has not been overblown",seedtext)) %>%
-  with(findPoliteTexts(text, politeness(text,parser="spacy"),receptiveNLP,type = "both",num_docs = 20))
+  with(findPoliteTexts(text, politeness(text,parser="spacy"),receptiveNLP,type = "most"))
 
 ###############################################
 # Get a plot
@@ -38,5 +38,5 @@ politenessPlot(train.polite,train.DV,
         panel.grid.minor.y = element_blank(),
         panel.grid.major.y = element_blank())
 
-ggsave("figures/figure1.png",units="cm",res=300,width=20,height=14)
+ggsave("figure1.png",units="cm",width=20,height=14)
 

@@ -38,7 +38,7 @@ CRstudy1A <- CRstudy1A %>%
 CRstudy1A %>%
   with(summary(lm(scale(receptiveAll)~receptive)))
 
- # median of treatment group is in the XX percentile of control group
+# median of treatment group is in the XX percentile of control group
 .median<-CRstudy1A %>%
   filter(receptive==1) %>%
   with(median(receptiveAll))
@@ -71,35 +71,33 @@ CRstudy1A %>%
 
 
 ### Moral Foundations Theory Tests
-MFTdat<-quanteda::dfm(CRstudy1A$text,
-                      dictionary=quanteda::dictionary(file="data/MFD2.0.dic"))%>%
-  as_tibble() %>%
-  mutate(ResponseId=CRstudy1A$ResponseId) %>%
-  left_join(CRstudy1A, by="ResponseId") %>%
-  mutate(writer_cons=factor(ifelse(issue=="blm",issue_agree,1-issue_agree),
-                            levels=c(0,1),labels=c("Liberal","Conservative")),
-         consLibMFT=scale(care.virtue+care.vice+fairness.virtue+fairness.vice
-                          -loyalty.virtue-loyalty.vice-authority.virtue-authority.vice
-                          -sanctity.virtue-sanctity.vice), 
-         targetMFT=ifelse(writer_cons=="Liberal",(-1)*consLibMFT,consLibMFT))
+CRstudy1A <- CRstudy1A %>%
+  left_join(quanteda::dfm(CRstudy1A$text,
+                          dictionary=quanteda::dictionary(file="data/MFD2.0.dic"))%>%
+              as_tibble() %>%
+              mutate(ResponseId=CRstudy1A$ResponseId),
+            by="ResponseId")%>%
+              mutate(writer_cons=factor(ifelse(issue=="blm",issue_agree,1-issue_agree),
+                                        levels=c(0,1),labels=c("Liberal","Conservative")),
+                     consLibMFT=scale(care.virtue+care.vice+fairness.virtue+fairness.vice
+                                      -loyalty.virtue-loyalty.vice-authority.virtue-authority.vice
+                                      -sanctity.virtue-sanctity.vice), 
+                     targetMFT=ifelse(writer_cons=="Liberal",(-1)*consLibMFT,consLibMFT))
 
 summary(lm(scale(receptiveAll)~scale(targetMFT),
-           data=MFTdat))
+           data=CRstudy1A))
 confint(lm(scale(receptiveAll)~scale(targetMFT),
-           data=MFTdat))
+           data=CRstudy1A))
 
 # Test of "communicated warmth" 
 
-commWarmth<-politenessProjection(politeness(politeness::phone_offers$message,parser="spacy"),
+CRstudy1A$commWarmth<-politenessProjection(politeness(politeness::phone_offers$message,parser="spacy"),
                                  politeness::phone_offers$condition,
                                  CRstudy1A %>%
                                    select(text) %>%
                                    politeness(parser="spacy"))$test_proj
-
-cor.test(commWarmth,
-         CRstudy1A %>%
-           select(receptiveAll) %>%
-           unlist())
+CRstudy1A %>%
+  with(cor.test(commWarmth,receptiveAll))
 
 
 ###############################################

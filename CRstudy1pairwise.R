@@ -50,10 +50,7 @@ judgePairs%>%
 
 accData <- CRstudy1B %>%
   left_join(CRstudy1A %>%
-              select(ResponseId,receptiveNLP,sentiment,wordcount),
-            by=c("targetID"="ResponseId")) %>%
-  left_join(MFTdat %>%
-              select(ResponseId,targetMFT),
+              select(ResponseId,receptiveNLP,sentiment,wordcount,targetMFT),
             by=c("targetID"="ResponseId"))
 
 left_join(accData %>%

@@ -33,8 +33,9 @@ source("CWstudy3.R")
 # Conversational Receptiveness:
 #     Improving Engagement with Opposing Views
 
-library(DTMtools)
-
+library(DTMtools) # Mike Y's special ngram extractor
+library(multiwayvcov) # cluster-robust standard errors
+library(lmtest) # regression models
 ##################################################
 
 
@@ -47,8 +48,10 @@ source("CRstudy1transfer.R")
 source("CRstudy1interpret.R")
 
 CRstudy2<-read.csv("data/CRstudy2.csv")
-source("CRstudy2.R")
 
+source("CRstudy2.R")
+source("CRstudy2outcomes.R")
+source("CRstudy2bmm.R")
 
 
 #######################################################
