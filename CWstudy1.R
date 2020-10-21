@@ -8,27 +8,6 @@
 #
 ######################################################
 
-
-# Structured Responses
-
-CWstudy1 %>%
-  group_by(warm) %>%
-  summarize(m=mean(OwnMessage),
-            sd=sd(OwnMessage))
-
-CWstudy1 %>%
-  with(t.test(OwnMessage~warm, var.equal=TRUE))
-
-CWstudy1 <-CWstudy1 %>%
-  mutate(about.the.same=1*(OwnMessage==3)) 
-
-CWstudy1%>%
-  group_by(warm) %>%
-  summarize(m=mean(about.the.same))
-
-CWstudy1 %>%
-  with(chisq.test(table(about.the.same,warm)))
-
 # Writing Time
 
 CWstudy1 %>%
@@ -39,16 +18,15 @@ CWstudy1 %>%
 CWstudy1 %>%
   with(t.test(write.time~warm, var.equal=TRUE))
 
-
 # Word Count
 
 CWstudy1 <-CWstudy1 %>%
-  mutate(wordCount=str_count(message,"[[alpha:]]+")) 
+  mutate(wordCount=str_count(message,"[[:alpha:]]+")) 
 
 CWstudy1 %>%
   group_by(warm) %>%
-  summarize(m=mean(write.time),
-            sd=sd(write.time))
+  summarize(m=mean(wordCount),
+            sd=sd(wordCount))
 
 CWstudy1 %>%
   with(t.test(wordCount~warm, var.equal=TRUE))
@@ -58,19 +36,19 @@ CWstudy1 %>%
 # POLITENESS!
 ####################################################
 
-#spacyr::spacy_initialize()
-
 polite.data<-politeness(CWstudy1$message, parser="spacy")
 
 # Examples
-findPoliteTexts(CWstudy1$message,polite.data,CWstudy1$warm,type = "most")
-findPoliteTexts(CWstudy1$message,polite.data,CWstudy1$warm,type = "least")
+findPoliteTexts(CWstudy1$message,polite.data,CWstudy1$warm,type = "most") %>%
+  as_tibble()
+findPoliteTexts(CWstudy1$message,polite.data,CWstudy1$warm,type = "least") %>%
+  as_tibble()
 
 # Plot
 politenessPlot(polite.data,
                middle_out=.01,
                split=(CWstudy1$warm==1),
-               split_levels=c("Warm","Tough"),
+               split_levels=c("Tough","Warm"),
                split_name="Communication Style",
                split_cols=c("darkslategray2","firebrick"))
 
@@ -90,4 +68,4 @@ LIWCwarm<-quanteda::dictionary(list(warmth=c("affectionate","child*","cheer*","c
 
 CWstudy1$warmth<-as.vector(dfm(CWstudy1$message,dictionary=LIWCwarm))/CWstudy1$wordCount
 
-hist(CWstudy1$warmth)
+hist(CWstudy1$warmth) # not many hits... unlikely to do well

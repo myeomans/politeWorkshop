@@ -6,11 +6,28 @@
 #
 #######################################################
 
+# Run once
+# install.packages(c("devtools","glmnet","politeness",
+#                    "multiwayvcov","lmtest","pROC",
+#                   "quanteda","tidyverse","spacyr"))
+# devtools::install_github("myeomans/DTMtools")
+# 
+
+spacyr::spacy_install() # creates grammar parsing engine 
+
+
+# Run every time
+
 library(politeness)  # what we're here for
 library(quanteda)    # generic text analysis
 library(tidyverse)   # useful and ubiquitous
 library(glmnet)      # machine learning algorithm 
 library(pROC)        # non-parametric accuracy using ROC 
+library(DTMtools)    # Mike Y's special ngram extractor
+library(multiwayvcov) # cluster-robust standard errors
+library(lmtest)      # regression models
+
+spacyr::spacy_initialize() # turns on grammar parsing engine 
 
 #######################################################
 
@@ -33,15 +50,14 @@ source("CWstudy3.R")
 # Conversational Receptiveness:
 #     Improving Engagement with Opposing Views
 
-library(DTMtools) # Mike Y's special ngram extractor
-library(multiwayvcov) # cluster-robust standard errors
-library(lmtest) # regression models
+
 ##################################################
 
 
 
 CRstudy1A<-read.csv("data/CRstudy1A.csv")
 CRstudy1B<-read.csv("data/CRstudy1B.csv")
+
 source("CRstudy1.R")
 source("CRstudy1pairwise.R")
 source("CRstudy1transfer.R")
