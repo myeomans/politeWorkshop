@@ -33,10 +33,16 @@ CRstudy1A <- CRstudy1A %>%
             by=c("ResponseId"="targetID"))
 
 
-# Effect of responder's condition assignment on average rating of their response
+# Effect of (weak) treatment effect on average rating of their response
 
 CRstudy1A %>%
   with(summary(lm(scale(receptiveAll)~receptive)))
+
+CRstudy1A %>% 
+  group_by(receptive) %>%
+  summarize(mean=mean(receptiveAll),
+            sd=sd(receptiveAll))
+
 
 # median of treatment group is in the XX percentile of control group
 .median<-CRstudy1A %>%
@@ -46,11 +52,6 @@ CRstudy1A %>%
 CRstudy1A %>% 
   filter(receptive==0) %>%
   with(mean(receptiveAll<=.median))
-
-CRstudy1A %>% 
-  group_by(receptive) %>%
-  summarize(mean=mean(receptiveAll),
-            sd=sd(receptiveAll))
 
 
 ###############################################
@@ -64,16 +65,15 @@ CRstudy1A <- CRstudy1A %>%
          sentiment=(simple.polite$Positive.Emotion-simple.polite$Negative.Emotion)/wordcount,
          emotion=(simple.polite$Positive.Emotion+simple.polite$Negative.Emotion)/wordcount)
 
-
 CRstudy1A %>%
   with(list(sentiment=cor.test(receptiveAll,sentiment),
             wordcount=cor.test(receptiveAll,wordcount)))
 
-
 ### Moral Foundations Theory Tests
+morFoDict<-quanteda::dictionary(file="data/MFD2.0.dic")
+
 CRstudy1A <- CRstudy1A %>%
-  left_join(quanteda::dfm(CRstudy1A$text,
-                          dictionary=quanteda::dictionary(file="data/MFD2.0.dic"))%>%
+  left_join(quanteda::dfm(CRstudy1A$text, dictionary=morFoDict)%>%
               as_tibble() %>%
               mutate(ResponseId=CRstudy1A$ResponseId),
             by="ResponseId")%>%

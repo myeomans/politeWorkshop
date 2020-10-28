@@ -11,9 +11,7 @@
 #                    "multiwayvcov","lmtest","pROC",
 #                   "quanteda","tidyverse","spacyr"))
 # devtools::install_github("myeomans/DTMtools")
-# 
-
-spacyr::spacy_install() # creates grammar parsing engine 
+# spacyr::spacy_install() # creates grammar parsing engine 
 
 
 # Run every time
@@ -50,7 +48,6 @@ source("CWstudy3.R")
 # Conversational Receptiveness:
 #     Improving Engagement with Opposing Views
 
-
 ##################################################
 
 
@@ -59,8 +56,9 @@ CRstudy1A<-read.csv("data/CRstudy1A.csv")
 CRstudy1B<-read.csv("data/CRstudy1B.csv")
 
 source("CRstudy1.R")
-source("CRstudy1pairwise.R")
 source("CRstudy1transfer.R")
+source("CRstudy1pairwise.R")
+
 source("CRstudy1interpret.R")
 
 CRstudy2<-read.csv("data/CRstudy2.csv")

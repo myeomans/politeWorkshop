@@ -9,6 +9,7 @@
 #######################################################
 # Does receptiveness model transfer across topics?
 #######################################################
+
 blm.polite<-CRstudy1A %>%
   filter(issue=="blm") %>% 
   select(text) %>%
@@ -35,14 +36,15 @@ sa.DV.rated<-CRstudy1A %>%
 
 
 ###############################################
-#Estimate the transfer learning rate from annotations
+#Estimate the transfer learning rate from BLM to SA
 
 print(cor.test(politenessProjection(blm.polite,
                                     blm.DV.rated,
                                     sa.polite)$test_proj,
                sa.DV.rated))
 
-# both ways!
+#Estimate the transfer learning rate from SA to BLM
+
 print(cor.test(politenessProjection(sa.polite,
                                     sa.DV.rated,
                                     blm.polite)$test_proj,
@@ -64,45 +66,49 @@ sa.DV.rated<-CRstudy1A %>%
   unlist() %>%
   as.numeric()
 
+# Train on BLM
 blm.ng<-CRstudy1A %>%
   filter(issue=="blm") %>% 
   select(text) %>%
   unlist() %>%
   DTMtools::DTM(ngrams = 1:3, stop.words = TRUE) %>%
-  as.tibble()
+  as_tibble()
+
+# Test on SA (using ngrams from BLM training)
 
 sa.ng<-CRstudy1A %>%
   filter(issue=="sa") %>% 
   select(text) %>%
   unlist() %>%
   DTMtools::DTM(ngrams = 1:3, stop.words=TRUE, vocabmatch = blm.ng) %>%
-  as.tibble()
+  as_tibble()
 
-
-
-
+# Estimate transfer learning rate
 print(cor.test(politenessProjection(blm.ng,
                                     blm.DV.rated,
                                     sa.ng)$test_proj,
                sa.DV.rated))
 
 
-# both ways!
+# Train on SA
 
 sa.ng<-CRstudy1A %>%
   filter(issue=="sa") %>% 
   select(text) %>%
   unlist() %>%
   DTMtools::DTM(ngrams = 1:3, stop.words = TRUE) %>%
-  as.tibble()
+  as_tibble()
+
+# Test on BLM (using ngrams from SA training)
 
 blm.ng<-CRstudy1A %>%
   filter(issue=="blm") %>% 
   select(text) %>%
   unlist() %>%
   DTMtools::DTM(ngrams = 1:3, stop.words=TRUE, vocabmatch = sa.ng) %>%
-  as.tibble()
+  as_tibble()
 
+# Estimate transfer learning rate
 print(cor.test(politenessProjection(sa.ng,
                                     sa.DV.rated,
                                     blm.ng)$test_proj,

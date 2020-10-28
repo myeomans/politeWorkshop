@@ -24,6 +24,7 @@ for(.s in 1:nrow(CRstudy1B)){
 # human pairwise accuracy
 #################################################################################
 
+# move from one row per judgment to one row per judge
 judgePairs<-left_join(CRstudy1B %>%
             select(target, ownRating,ResponseId) %>%
             spread(target, ownRating) %>%
@@ -35,11 +36,10 @@ judgePairs<-left_join(CRstudy1B %>%
 
 head(judgePairs)
 
+
 judgePairs%>%
-  mutate(ownChoose=1*(ownA>ownB),
-         otherChoose=1*(otherA>otherB),
-         ownDiff=(ownA-ownB),
-         otherDiff=(otherA-otherB),
+  mutate(ownChoose=1*(ownA>ownB), # which does the judge think is more receptive?
+         otherChoose=1*(otherA>otherB),  # which do the other judges think is more receptive?
          acc=1*(ownChoose==otherChoose)) %>%
   summarize(m=mean(acc),se=sd(acc)/sqrt(n()),
             l=m-1.96*se,u=m+1.96*se)
@@ -83,11 +83,8 @@ left_join(accData %>%
          wordcountAcc=1*((wordcountA>wordcountB)==crowdChoose),
          mftAcc=1*((mftA>mftB)==crowdChoose),
          algoAcc=1*((algoA>algoB)==crowdChoose)
-         #transferAcc=1*((transferA>transferB)==crowdChoose)
   ) %>%
-  select(sentimentAcc,wordcountAcc,
-         humanAcc,#transferAcc
-         mftAcc,algoAcc) %>%
+  select(sentimentAcc,wordcountAcc,humanAcc,mftAcc,algoAcc) %>%
   gather(predictor,acc) %>%
   group_by(predictor) %>%
   summarize(m=mean(acc),l=m-1.96*sd(acc)/sqrt(n()),u=m+1.96*sd(acc)/sqrt(n())) %>%
